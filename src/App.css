@@ -1,36 +1,112 @@
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
-.topinfo-createnovel {
+.avatar-uploader > .ant-upload {
+  width: 200px;
+  height: 300px;
+  border: black solid 2px;
+  align-items: center;
+  justify-content: center;
+}
+
+.body {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 10% 0% 5% 0%;
 }
 
-.selectbox-createnovel {
-  width: auto;
-  margin-right: 20%;
-  margin-bottom: 2%;
-  justify-content: flex-start;
-}
-
-.select-createnovel {
-  padding-right: 40%;
-  padding-bottom: 10%;
-  size: 20px;
-}
-
-.namebook {
-  width: auto;
+.halfbody-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 20px;
 }
 
 .typeof-createnovel {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  justify-content: space-between;
+}
+
+/* 
+.body-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+} */
+
+.selectbox {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.allbutton-createnovel {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.yellowbutton {
+  background-color: #ffb900;
+  color: #ffff;
+  height: 50px;
+  width: 100%;
+  border-radius: 10px;
+  font-size: 20px;
+  border-style: none;
   justify-content: center;
+}
+
+.greybutton {
+  background-color: #ffff;
+  color: #b3bace;
+  height: 50px;
+  width: 100%;
+  border-radius: 10px;
+  border: 20px soild #b3bace;
+  font-size: 20px;
+  border-style: none;
+  justify-content: center;
+}
+
+.redbutton {
+  background-color: rgb(190, 49, 49);
+  color: #ffff;
+  height: 50px;
+  width: 100%;
+  border-radius: 10px;
+  font-size: 20px;
+  border-style: none;
+  justify-content: center;
+}
+
+.box-greybutton {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.ant-dropdown-link {
+  padding: 10px;
+  background-color: rgb(202, 31, 31);
+  width: 200px;
+  justify-content: center;
+}
+
+.infobox-profile {
+  display: flex;
+  flex-direction: column;
+}
+
+.avatar-profile {
+  display: flex;
+  flex-direction: row;
+}
+
+.statistics {
+  display: flex;
+  flex-direction: row;
 }

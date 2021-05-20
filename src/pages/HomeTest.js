@@ -26,8 +26,6 @@ function OrderTest() {
         setNovelContent(res.data.episodes);
     };
 
-    console.log(novelContent);
-
     useEffect(() => {
         fetchAllNovel();
     }, []);
@@ -53,10 +51,6 @@ function OrderTest() {
                         <div style={{ width: '160px', textAlign: 'center' }}>
                             <p>{item.title}</p>
                             <p>{item.novelType}</p>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <p><b>{(item.price === 0) ? '' : `THB ${item.price}`}</b></p>
-                                {(item.price === 0) ? '' : <a href='#'><img width='30px' src='https://i.pinimg.com/originals/15/bb/55/15bb559cdd28f56d7c17b00498b4a946.png' /></a>}
-                            </div>
                             {toggleShow &&
                                 <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100vw', height: '100vh', backgroundColor: 'rgba(255,255,255,0.5)' }}>
                                     <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '900px', height: 'auto', boxShadow: '0px 5px 15px 0px rgba(0,0,0,0.31)', backgroundColor: '#fff' }}>
@@ -70,7 +64,7 @@ function OrderTest() {
                                                         <div style={{ width: '600px' }}>
                                                             <h1 style={{ textAlign: 'left', margin: '20px 0 0 0' }}>{item.title}</h1>
                                                             <h3 style={{ textAlign: 'left', marginBottom: '20px' }}><img width='30px' src={item.writerImg} /> {item.writer}</h3>
-                                                            <h3 style={{ textAlign: 'left', marginBottom: '20px' }}>{item.type}</h3>
+                                                            <h3 style={{ textAlign: 'left', marginBottom: '20px' }}>{item.novelType}</h3>
                                                             <p style={{ textAlign: 'left' }}>{item.description}</p>
                                                         </div>
                                                     </div>
@@ -78,7 +72,7 @@ function OrderTest() {
                                                     {novelContent.map((item, j) => {
                                                         return (
                                                             <div key={j} style={{ display: 'flex', justifyContent: 'space-between', cursor: 'pointer' }}>
-                                                                <div style={{ marginLeft: '40px' }} onClick={() => history.push({ pathname: '/read', state: novelContent })}>
+                                                                <div style={{ marginLeft: '40px' }} onClick={() => history.push({ pathname: '/read', state: { novelContent: novelContent, content: novelContent[j] } })}>
                                                                     EP.{item.episodeNumber} : {item.episodeTitle}
                                                                 </div>
                                                                 <div style={{ marginRight: '40px' }}>
@@ -93,6 +87,10 @@ function OrderTest() {
                                     </div>
                                 </div>
                             }
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <p><b>{(item.price === 0) ? '' : `THB ${item.price}`}</b></p>
+                                {(item.price === 0) ? '' : <a href='#'><img width='30px' src='https://i.pinimg.com/originals/15/bb/55/15bb559cdd28f56d7c17b00498b4a946.png' onClick={() => console.log('basket')} /></a>}
+                            </div>
                         </div>
                     </div>;
                 })}

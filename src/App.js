@@ -1,15 +1,16 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import newCreateNovelPage from "./pages/newCreateNovelPage";
+import CreateNovelPage from "./pages/CreateNovelPage";
 import ProfilePage from "./pages/ProfilePage";
+import CreateEpisodePage from "./pages/CreateEpisodePage";
 
 function App() {
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path="/profile" component={ProfilePage} />
-        <Route exact path="/newcreatenovel" component={newCreateNovelPage} />
+        <Route exact path="/createnovel" component={CreateNovelPage} />
+        <Route exact path="/createepisode" component={CreateEpisodePage} />
       </Switch>
     </BrowserRouter>
   );

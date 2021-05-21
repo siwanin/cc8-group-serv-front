@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
 
 function Read() {
     const location = useLocation();
     const [content, setContent] = useState(location.state.content);
-    const novelContent = location.state.novelContent;
+    const novelContent = [...location.state.novelContent];
     const [toggleIndex, setToggleIndex] = useState(false);
 
     return (

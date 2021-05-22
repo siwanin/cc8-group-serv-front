@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import localStorageService from '../services/localStorageService';
 
 function OrderTest() {
     const history = useHistory();
+    const token = localStorageService.getToken();
 
     const [novels, setNovels] = useState([]);
     const [novel, setNovel] = useState([]);
@@ -25,6 +27,14 @@ function OrderTest() {
     const fetchNovelContent = async (id) => {
         const res = await axios.get(`http://localhost:8000/novel/${id}/episode`);
         setNovelContent(res.data.episodes);
+    };
+
+    const followWriter = async (writerId) => {
+        await axios.post(`http://localhost:8000/user/follow/${writerId}`, {}, { headers: { 'Authorization': `Bearer ${token}` } });
+    };
+
+    const followNovel = async (novelId) => {
+        await axios.post(`http://localhost:8000/user/follownovel/${novelId}`, {}, { headers: { 'Authorization': `Bearer ${token}` } });
     };
 
     const addBasketItem = (item) => {
@@ -88,8 +98,8 @@ function OrderTest() {
                                                             <img alt='cover' height='360px' width='250px' src={item.cover} style={{ margin: '20px' }} />
                                                         </div>
                                                         <div style={{ width: '600px' }}>
-                                                            <h1 style={{ textAlign: 'left', margin: '20px 0 0 0' }}>{item.title}</h1>
-                                                            <h3 style={{ textAlign: 'left', marginBottom: '20px' }}><img alt='writer' width='30px' src={item.writerImg} /> {item.writer}</h3>
+                                                            <h1 style={{ textAlign: 'left', margin: '20px 0 0 0' }}>{item.title} <button onClick={() => followNovel(item.id)}>follow novel</button></h1>
+                                                            <h3 style={{ textAlign: 'left', marginBottom: '20px' }}><img alt='writer' width='30px' src={item.writerImg} /> {item.writer} <button onClick={() => followWriter(item.userId)}>follow writer</button></h3>
                                                             <h3 style={{ textAlign: 'left', marginBottom: '20px' }}>{item.novelType}</h3>
                                                             <p style={{ textAlign: 'left' }}>{item.description}</p>
                                                         </div>

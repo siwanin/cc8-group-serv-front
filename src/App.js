@@ -7,6 +7,8 @@ import Order from "./pages/Order";
 import Login from "./pages/Login";
 import ViewOrder from "./pages/ViewOrder";
 import ViewOrderItem from "./pages/ViewOrderItem";
+import Follow from "./pages/Follow";
+import ReadHistory from "./pages/ReadHistory";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route exact path="/order" component={Order} />
         <Route exact path="/vieworder" component={ViewOrder} />
         <Route exact path="/vieworderitem" component={ViewOrderItem} />
+        <Route exact path="/follow" component={Follow} />
+        <Route exact path="/readhistory" component={ReadHistory} />
       </Switch>
     </BrowserRouter>
   );

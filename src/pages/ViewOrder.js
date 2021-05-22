@@ -18,8 +18,6 @@ function ViewOrder() {
         fetchUserOrder();
     }, []);
 
-    console.log(order);
-
     return (
         <div style={{ width: 'auto', minHeight: '100vh', padding: '50px' }}>
             <div style={{ margin: 'auto', width: '70%' }}>

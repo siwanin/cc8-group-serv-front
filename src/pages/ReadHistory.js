@@ -9,20 +9,21 @@ function ReadHistory() {
 
     const [histories, setHistories] = useState([]);
     const [novelContent, setNovelContent] = useState([]);
+    const [toggleShow, setToggleShow] = useState(false);
 
     const fetchHistory = async () => {
         const res = await axios.get('http://localhost:8000/user/history', { headers: { 'Authorization': `Bearer ${token}` } });
         setHistories(res.data.histories);
     };
 
-    const fetchNovelContent = async () => {
-        for (let item of histories) {
-            const res = await axios.get(`http://localhost:8000/novel/content/${item.episodeId}`);
-            setNovelContent(prev => [...prev, res.data.episode[0]]);
-        }
+    const fetchNovelContent = async (id) => {
+        const res = await axios.get(`http://localhost:8000/novel/content/${id}`);
+        setNovelContent(res.data.episode);
     };
 
-    if (novelContent === []) fetchNovelContent();
+    const readHistory = async (id) => {
+        await axios.post(`http://localhost:8000/user/read/${id}`, {}, { headers: { 'Authorization': `Bearer ${token}` } });
+    };
 
     useEffect(() => {
         fetchHistory();
@@ -48,14 +49,30 @@ function ReadHistory() {
                                     <p style={{ textAlign: 'left' }}>{item.episodeTitle}</p>
                                     <p>{item.updatedAt.split('T')[0]}</p>
                                     <p>{item.updatedAt.split('T')[1].split('.')[0]}</p>
-                                    <button onClick={() => { history.push({ pathname: '/read', state: { novelContent: [novelContent[0]], content: novelContent[i] } }); }}>Read</button>
+                                    <button onClick={() => { fetchNovelContent(item.episodeId); readHistory(item.episodeId); setToggleShow(!toggleShow); }}>Read</button>
                                 </div>
                             );
                         })}
                     </div>
+                    {toggleShow &&
+                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100vw', height: '100vh', backgroundColor: 'rgba(255,255,255,0.5)' }} onClick={() => { setToggleShow(!toggleShow); history.go(0); }}>
+                            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '900px', height: 'auto', boxShadow: '0px 5px 15px 0px rgba(0,0,0,0.31)', backgroundColor: '#fff' }}>
+                                {novelContent.map((item, i) => {
+                                    return (
+                                        <div key={i} style={{ padding: '50px' }}>
+                                            <h1 style={{ textAlign: 'center', marginBottom: '10px' }}>{item.title}</h1>
+                                            <h1 style={{ textAlign: 'center' }}>Episode:{item.episodeNumber}</h1>
+                                            <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>{item.episodeTitle}</h2>
+                                            <p style={{ textAlign: 'justify' }}>{item.content}</p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

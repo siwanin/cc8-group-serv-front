@@ -11,6 +11,9 @@ function OrderTest() {
     const [novel, setNovel] = useState([]);
     const [novelContent, setNovelContent] = useState([]);
     const [basket, setBasket] = useState([]);
+    const [comment, setComment] = useState([]);
+    const [userComment, setUserComment] = useState([]);
+    const [score, setScore] = useState(3);
     const [toggleBasket, setToggleBasket] = useState(false);
     const [toggleShow, setToggleShow] = useState(false);
 
@@ -35,6 +38,21 @@ function OrderTest() {
 
     const followNovel = async (novelId) => {
         await axios.post(`http://localhost:8000/user/follownovel/${novelId}`, {}, { headers: { 'Authorization': `Bearer ${token}` } });
+    };
+
+    const fetchComment = async (novelId) => {
+        const res = await axios.get(`http://localhost:8000/novel/rating/${novelId}`);
+        setComment(res.data.novelRating);
+    };
+
+    const postComment = async (novelId) => {
+        await axios.post(`http://localhost:8000/novel/rating/${novelId}`, { comment: userComment, score }, { headers: { 'Authorization': `Bearer ${token}` } });
+        fetchComment(novelId);
+    };
+
+    const deleteComment = async (id, novelId) => {
+        await axios.delete(`http://localhost:8000/novel/rating/${id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+        fetchComment(novelId);
     };
 
     const addBasketItem = (item) => {
@@ -64,7 +82,6 @@ function OrderTest() {
                     </div>
                     {basket.map((item, i) => {
                         return (<div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 0.4fr', padding: '10px', textAlign: 'center' }}>
-                            {}
                             <p style={{ textAlign: 'left' }}>{item.title}: {item.episodeTitle} </p>
                             <p>{item.price}</p>
                             <button style={{ height: '20px' }} onClick={() => deleteBasketItem(i)}> x </button>
@@ -76,7 +93,7 @@ function OrderTest() {
             <h1>Novel</h1>
             <div style={{ display: 'flex' }}>
                 {novels.map((item, i) => {
-                    return <div key={i} style={{ margin: '0 10px' }} onClick={() => { fetchNovel(item.id); fetchNovelContent(item.id); }}>
+                    return <div key={i} style={{ margin: '0 10px' }} onClick={() => { fetchNovel(item.id); fetchNovelContent(item.id); fetchComment(item.id); }}>
                         <div style={{
                             backgroundImage: `url(${item.cover})`,
                             backgroundSize: 'cover',
@@ -88,7 +105,7 @@ function OrderTest() {
                             <p onClick={() => setToggleShow(!toggleShow)}>{item.title}</p>
                             <p onClick={() => setToggleShow(!toggleShow)}>{item.novelType}</p>
                             {toggleShow &&
-                                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100vw', height: '100vh', backgroundColor: 'rgba(255,255,255,0.5)' }} onClick={() => setToggleShow(!toggleShow)}>
+                                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100vw', height: '100vh', backgroundColor: 'rgba(255,255,255,0.5)' }}>
                                     <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '900px', height: 'auto', boxShadow: '0px 5px 15px 0px rgba(0,0,0,0.31)', backgroundColor: '#fff' }}>
                                         {novel.map((item, i) => {
                                             return (
@@ -102,9 +119,9 @@ function OrderTest() {
                                                             <h3 style={{ textAlign: 'left', marginBottom: '20px' }}><img alt='writer' width='30px' src={item.writerImg} /> {item.writer} <button onClick={() => followWriter(item.userId)}>follow writer</button></h3>
                                                             <h3 style={{ textAlign: 'left', marginBottom: '20px' }}>{item.novelType}</h3>
                                                             <p style={{ textAlign: 'left' }}>{item.description}</p>
+                                                            <button style={{ position: 'absolute', top: '10px', right: '10px', width: '30px' }} onClick={() => setToggleShow(!toggleShow)}> x </button>
                                                         </div>
                                                     </div>
-                                                    <hr />
                                                     {novelContent.map((item, j) => {
                                                         return (
                                                             <div key={j} style={{ display: 'flex', justifyContent: 'space-between', cursor: 'pointer' }}>

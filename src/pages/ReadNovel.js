@@ -6,17 +6,37 @@ import localStorageService from '../services/localStorageService';
 function Read() {
     const location = useLocation();
     const [content, setContent] = useState(location.state.content);
-    const novelContent = [...location.state.novelContent];
+    const [novelContent] = [...location.state.novelContent];
     const [toggleIndex, setToggleIndex] = useState(false);
+    const [comment, setComment] = useState([]);
+    const [userComment, setUserComment] = useState([]);
     const token = localStorageService.getToken();
 
     const readHistory = async (id) => {
         await axios.post(`http://localhost:8000/user/read/${id}`, {}, { headers: { 'Authorization': `Bearer ${token}` } });
     };
 
+    const fetchComment = async (id) => {
+        const res = await axios.get(`http://localhost:8000/novel/comment/${id}`);
+        setComment(res.data.userComment);
+    };
+
+    const postComment = async (id) => {
+        await axios.post(`http://localhost:8000/novel/comment/${id}`, { comment: userComment }, { headers: { 'Authorization': `Bearer ${token}` } });
+        fetchComment(id);
+    };
+
+    const deleteComment = async (id) => {
+        await axios.delete(`http://localhost:8000/novel/comment/${id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+        fetchComment(content.id);
+    };
+
     useEffect(() => {
         readHistory(content.id);
+        fetchComment(content.id);
     }, []);
+
+    console.log(comment);
 
     return (
         <div style={{ backgroundColor: '#ccc', padding: '50px 0' }}>
@@ -37,6 +57,27 @@ function Read() {
                 <p style={{ textAlign: 'justify', marginBottom: '50px' }}>{content.content}</p>
                 <h2 style={{ margin: '0 50px 10px' }}>{!(novelContent[content.episodeNumber]) ? '' : `Next Episode: ${novelContent[content.episodeNumber].episodeTitle}`}</h2>
                 {!(novelContent[content.episodeNumber]) ? '' : <button style={{ height: '30px', padding: '0 5px' }} onClick={() => { setContent(novelContent[content.episodeNumber]); setToggleIndex(false); readHistory(content.id + 1); }}>Continue Reading</button>}
+                <div style={{ width: '100%' }}>
+                    <form onSubmit={(e) => { e.preventDefault(); postComment(content.id); setUserComment(''); }} style={{ marginBottom: '10px' }}>
+                        <h3>Comment </h3>
+                        <input type='text' value={userComment} onChange={(e) => setUserComment(e.target.value)} placeholder='Comment' style={{ width: '100%', minHeight: '50px' }} />
+                        <button type='submit'> Comment </button>
+                    </form>
+                    <hr />
+                    {comment.map((item, i) => {
+                        return (
+                            <div key={i}>
+                                <h3 style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    {item.User.username}
+                                    <button onClick={() => { deleteComment(comment[i].id); }}> x </button>
+                                </h3>
+                                <p style={{ fontSize: '10px', marginBottom: '10px' }}>{item.updatedAt.split('T')[0]}</p>
+                                <p style={{ marginBottom: '10px' }}>{item.comment}</p>
+                                <hr />
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         </div >
     );
